@@ -11,6 +11,7 @@ services:
 
     environment:
       DJANGO_DEBUG: "1"
+      DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY:-django-insecure-local-demo-key}"
       DJANGO_ALLOWED_HOSTS: "127.0.0.1,localhost,0.0.0.0"
 
     command: >
