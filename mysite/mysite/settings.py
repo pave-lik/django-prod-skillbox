@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 from django.urls import reverse_lazy
@@ -24,11 +25,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-hvxn%qq=gyw^4*o2lo1#bw0=wh#ux9s8h!=@c608arf_gz3+^7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv(
+    "DJANGO_DEBUG",
+    "0",
+).strip().lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
 
 ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "0.0.0.0",
+    host.strip()
+    for host in os.getenv(
+        "DJANGO_ALLOWED_HOSTS",
+        "127.0.0.1,localhost",
+    ).split(",")
+    if host.strip()
 ]
 
 INTERNAL_IPS = [
@@ -39,10 +52,21 @@ INTERNAL_IPS = [
 if DEBUG:
     import socket
 
-    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS.append("10.0.2.2")
+
+    try:
+        hostname, _, ips = socket.gethostbyname_ex(
+            socket.gethostname()
+        )
+    except socket.gaierror:
+        ips = []
+
     INTERNAL_IPS.extend(
-        [ip[: ip.rfind(".")] + ".1" for ip in ips]
+        [
+            ip[: ip.rfind(".")] + ".1"
+            for ip in ips
+            if "." in ip
+        ]
     )
 
 # Application definition
@@ -157,6 +181,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'uploads'

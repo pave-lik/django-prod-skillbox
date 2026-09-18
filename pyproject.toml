@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "skillbox-django-prod"
+version = "0.1.0"
+description = "Skillbox Django production project"
+authors = ["Student <student@example.com>"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+Django = "4.2"
+django-debug-toolbar = "4.0.0"
+django-filter = "22.1"
+djangorestframework = "3.14.0"
+Pillow = "10.4.0"
+pytz = "2022.7.1"
+sqlparse = "0.4.2"
+asgiref = "3.6.0"
+gunicorn = "23.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
