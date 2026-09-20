@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
+from django.http import JsonResponse
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
@@ -22,6 +23,16 @@ from django.contrib.sitemaps.views import sitemap
 from .sitemaps import sitemaps
 
 urlpatterns = [
+    path(
+        "",
+        lambda request: JsonResponse(
+            {
+                "status": "ok",
+                "message": "Django application is running",
+            }
+        ),
+        name="home",
+    ),
     path('admin/', admin.site.urls),
     path('shop/', include('shopapp.urls')),
     path('myauth/', include('myauth.urls')),
